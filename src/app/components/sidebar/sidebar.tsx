@@ -21,20 +21,29 @@ const Sidebar = () => {
   };
 
   return (
-    <aside className="flex flex-col w-96 h-screen bg-white text-black px-10">
+    <aside className="flex flex-col w-96 h-auto bg-white text-black px-10">
       <img src="/sidebar/logo.png" alt="logo" className="w-48 self-center py-10" />
+      <div className="flex flex-col justify-between h-full mb-10">
       <ul className="space-y-4">
         {navItems.map(({ title, path }) => (
           <li key={title}>
             <SidebarComponent
               src="/sidebar/dashboard.png"
               title={title}
+              hoverColor="#ecf9ff"
               isClicked={selected === title}
               onClick={() => handleClick(title, path)}
             />
           </li>
         ))}
       </ul>
+      <SidebarComponent
+       src="/sidebar/keluar.png"
+              title={"Keluar"}
+              hoverColor="#fadcdc"
+              isClicked= {false}
+              onClick={() => handleClick("Keluar", "/login")} />
+      </div>
     </aside>
   );
 };

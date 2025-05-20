@@ -1,46 +1,16 @@
-'use client'
+'use client';
 
 import Table from "@/app/components/table";
+import { dummyData, Laporan } from "../all/dummyData";
 
-
-const data = [
-    {
-        Username: "Wir Wir Wir Jawir",
-        Title: "Ada anomali",
-        Description: "Anomali meses..",
-        Location: "Toilet Mushola",
-        Phone: "08123456789",
-    },
-    {
-        Username: "Bagasnegro",
-        Title: "Ada anomali",
-        Description: "Anomali meses..",
-        Location: "Toilet Mushola",
-        Phone: "08123456789",
-    },
-    {
-        Username: "Murtadlo",
-        Title: "Ada anomali",
-        Description: "Anomali meses..",
-        Location: "Toilet Mushola",
-        Phone: "08123456789",
-    },
-    {
-        Username: "Wir Wir Wir Jawir",
-        Title: "Ada anomali",
-        Description: "Anomali meses..",
-        Location: "Toilet Mushola",
-        Phone: "08123456789",
-    },
-];
+const data: Laporan[] = dummyData;
 
 export default function Done() {
-
   return (
-    <div className="p-20">
+    <div className="px-20 py-10">
       <div className="bg-white p-8 shadow-xl rounded-xl">
-      <h1 className="text-2xl font-bold mb-9 text-black">Laporan Selesai</h1>
-        <Table data={data} />
+        <h1 className="text-2xl font-bold mb-9 text-black">Laporan Selesai</h1>
+        <Table data={data} filterStatus="Selesai" />
       </div>
     </div>
   );

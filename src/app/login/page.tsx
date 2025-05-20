@@ -19,7 +19,7 @@ export default function LoginPage() {
           <Link href={"/dashboard"}><Button label="Login" type="submit" /></Link>
         </form>
         <p className="mt-4 text-sm text-center text-gray-600">
-          Belum punya akun? <Link href="/register" className="text-blue-600 hover:underline">Register</Link>
+          Belum punya akun? <Link href="/register" className="text-[#00608C] hover:underline">Register</Link>
         </p>
       </div>
     </div>

@@ -22,7 +22,7 @@ export default function RegisterPage() {
           <Button label="Register" type="submit" />
         </form>
         <p className="mt-4 text-sm text-center text-gray-600">
-          Sudah punya akun? <Link href="/login" className="text-blue-600 hover:underline">Login</Link>
+          Sudah punya akun? <Link href="/login" className="text-[#00608C] hover:underline">Login</Link>
         </p>
       </div>
     </div>
