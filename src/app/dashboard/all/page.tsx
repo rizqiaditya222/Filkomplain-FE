@@ -4,7 +4,8 @@ import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import IconProvider from "@/app/components/common/IconProvider";
 import reportService from "@/services/report-service";
-import { Report } from "@/types/repor
+import { Report } from "@/types/report";
+
 const mapStatus = (status: string): string => {
   switch (status) {
     case "pending":
