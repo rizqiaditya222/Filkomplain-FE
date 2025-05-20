@@ -1,3 +1,4 @@
+import Image from 'next/image';
 type SidebarComponentProps = {
   src: string; 
   title: string;
@@ -39,7 +40,7 @@ className={`w-full h-14 flex items-center justify-between gap-4 pl-4 pr-6 rounde
       onClick={onClick}
     >
       <div className="flex items-center gap-4">
-        <img src={imageSrc} alt={title} className="w-6 h-6" />
+        <Image src={imageSrc} alt={title} className="w-6 h-6" width={100} height={100}/>
         <p className={isClicked ? "text-white" : "text-[#9197B3]"}>{title}</p>
       </div>
       <span className={`${isClicked ? "text-white" : "text-[#9197B3]"} text-lg`}>→</span>

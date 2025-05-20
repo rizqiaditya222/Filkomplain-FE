@@ -95,7 +95,7 @@ export default function DetailPage() {
           className="mt-5 ml-auto flex flex-row items-center bg-[#AF3904] text-white px-4 py-2 rounded-md cursor-pointer w-fit gap-2"
           onClick={() => setIsEditing(!isEditing)}
         >
-          <img src="/icon/edit.png" alt="Edit" className="w-5" />
+          <Image src="/icon/edit.png" alt="Edit" className="w-5" width={100} height={100}/>
           <p>{isEditing ? 'Simpan' : 'Edit Status'}</p>
         </div>
       </div>

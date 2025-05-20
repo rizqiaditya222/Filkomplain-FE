@@ -1,5 +1,6 @@
 "use client";
 
+import Image from 'next/image';
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import SidebarComponent from "./sidebarComponent";
@@ -22,7 +23,7 @@ const Sidebar = () => {
 
   return (
     <aside className="flex flex-col w-96 h-auto bg-white text-black px-10">
-      <img src="/sidebar/logo.png" alt="logo" className="w-48 self-center py-10" />
+      <Image src="/sidebar/logo.png" alt="logo" className="w-48 self-center py-10" width={100} height={100} />
       <div className="flex flex-col justify-between h-full mb-10">
       <ul className="space-y-4">
         {navItems.map(({ title, path }) => (
