@@ -4,6 +4,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { dummyData } from '../dummyData';
 import Image from 'next/image';
+import IconProvider from '@/app/components/common/IconProvider';
 
 const statusOptions = ["Diajukan", "Diproses", "Selesai", "Active"];
 
@@ -28,14 +29,12 @@ export default function DetailPage() {
 
   return (
     <div className="flex flex-row h-full pr-40 p-10">
-      <Image
-        src="/icon/backButton.png"
-        alt="Back"
-        width={56}
-        height={56}
-        className="h-14 mr-10 cursor-pointer"
+      <button 
+        className="h-14 mr-10 cursor-pointer flex items-center justify-center"
         onClick={() => router.back()}
-      />
+      >
+        <IconProvider icon="ArrowLeftIcon" className="h-10 w-10 text-gray-600" />
+      </button>
 
       <div className="flex flex-col w-full h-full mb-10">
         <p className="text-2xl font-semibold text-black mb-2">{report.Title}</p>
@@ -91,13 +90,13 @@ export default function DetailPage() {
           </div>
         </div>
 
-        <div
+        <button
           className="mt-5 ml-auto flex flex-row items-center bg-[#AF3904] text-white px-4 py-2 rounded-md cursor-pointer w-fit gap-2"
           onClick={() => setIsEditing(!isEditing)}
         >
-          <Image src="/icon/edit.png" alt="Edit" className="w-5" width={100} height={100}/>
+          <IconProvider icon="PencilSquareIcon" className="w-5 h-5" />
           <p>{isEditing ? 'Simpan' : 'Edit Status'}</p>
-        </div>
+        </button>
       </div>
     </div>
   );

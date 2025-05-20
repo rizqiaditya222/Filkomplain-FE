@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import IconProvider from './common/IconProvider';
 
 type Laporan = {
   Username: string;
@@ -43,16 +44,22 @@ export default function Table({ data, itemsPerPage = 8, filterStatus }: Props) {
   return (
     <div>
       <div className="flex justify-end mb-4">
-        <input
-          type="text"
-          placeholder="Cari laporan..."
-          className="px-4 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#16C098]"
-          value={searchTerm}
-          onChange={(e) => {
-            setSearchTerm(e.target.value);
-            setCurrentPage(1);
-          }}
-        />
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="Cari laporan..."
+            className="pl-10 px-4 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#16C098]"
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setCurrentPage(1);
+            }}
+          />
+          <IconProvider 
+            icon="MagnifyingGlassIcon" 
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400"
+          />
+        </div>
       </div>
 
       <table className="w-full text-left text-sm text-gray-500 font-satoshi">
@@ -84,19 +91,21 @@ export default function Table({ data, itemsPerPage = 8, filterStatus }: Props) {
 
       {totalPages > 1 && (
         <div className="flex justify-between items-center mt-6">
-          <div className="text-sm text-gray-500">
+          <div className="text-sm text-gray-500 flex items-center">
+            <IconProvider icon="DocumentTextIcon" className="w-4 h-4 mr-1" />
             Menampilkan {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, filteredData.length)} dari {filteredData.length} laporan
           </div>
           <div className="flex space-x-2">
             <button
               onClick={() => paginate(currentPage - 1)}
               disabled={currentPage === 1}
-              className={`px-3 py-1 rounded-md ${
+              className={`px-3 py-1 rounded-md flex items-center ${
                 currentPage === 1
                   ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                   : "bg-gray-200 text-gray-700 hover:bg-gray-300"
               }`}
             >
+              <IconProvider icon="ChevronLeftIcon" className="w-4 h-4 mr-1" />
               Previous
             </button>
             {Array.from({ length: totalPages }, (_, i) => i + 1).map((number) => (
@@ -115,13 +124,14 @@ export default function Table({ data, itemsPerPage = 8, filterStatus }: Props) {
             <button
               onClick={() => paginate(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className={`px-3 py-1 rounded-md ${
+              className={`px-3 py-1 rounded-md flex items-center ${
                 currentPage === totalPages
                   ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                   : "bg-gray-200 text-gray-700 hover:bg-gray-300"
               }`}
             >
               Next
+              <IconProvider icon="ChevronRightIcon" className="w-4 h-4 ml-1" />
             </button>
           </div>
         </div>
