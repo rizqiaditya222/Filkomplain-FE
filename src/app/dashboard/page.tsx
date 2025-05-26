@@ -2,19 +2,23 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
+import IconProvider from "../components/common/IconProvider";
 
 export default function Dashboard() {
   const router = useRouter();
+  const { isAuthenticated, isLoading } = useAuth();
 
   useEffect(() => {
-    router.push("/dashboard/all");
-  }, [router]);
+    // Wait for authentication to complete, then redirect to all reports
+    if (!isLoading) {
+      router.push("/dashboard/all");
+    }
+  }, [isLoading, router]);
 
   return (
-    <div className="flex flex-col h-screen">
-      <div className="flex-1 p-8">
-        <p>Mengarahkan ke login...</p>
-      </div>
+    <div className="flex justify-center items-center h-screen">
+      <IconProvider icon="ArrowPathIcon" className="w-10 h-10 text-[#00608C] animate-spin" />
     </div>
   );
 }

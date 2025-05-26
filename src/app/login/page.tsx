@@ -1,23 +1,32 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import FormInput from "../components/login/FormInput";
 import Button from "../components/login/Button";
 import authService from "../../services/auth-service";
 import IconProvider from "../components/common/IconProvider";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { isAuthenticated, refreshUserProfile, isLoading } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (!isLoading && isAuthenticated) {
+      router.push("/dashboard");
+    }
+  }, [isAuthenticated, isLoading, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
+    setIsSubmitting(true);
     setError("");
 
     try {
@@ -27,6 +36,7 @@ export default function LoginPage() {
       });
 
       if (response.success) {
+        await refreshUserProfile();
         router.push("/dashboard");
       } else {
         setError("Login failed. Please check your credentials.");
@@ -34,9 +44,17 @@ export default function LoginPage() {
     } catch (err: any) {
       setError(err.response?.data?.message || "An error occurred during login");
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <IconProvider icon="ArrowPathIcon" className="w-10 h-10 text-[#00608C] animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -68,7 +86,7 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <Button label={isLoading ? "Processing..." : "Login"} type="submit" disabled={isLoading} />
+          <Button label={isSubmitting ? "Processing..." : "Login"} type="submit" disabled={isSubmitting} />
         </form>
         <p className="mt-4 text-sm text-center text-gray-600 flex items-center justify-center">
           <IconProvider icon="ArrowLeftIcon" className="w-4 h-4 mr-1" />

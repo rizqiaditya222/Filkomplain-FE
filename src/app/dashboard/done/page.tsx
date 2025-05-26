@@ -4,15 +4,8 @@ import Table from "@/app/components/table";
 import { useState, useEffect } from "react";
 import reportService from "@/services/report-service";
 import IconProvider from "@/app/components/common/IconProvider";
-
-interface LaporanFormat {
-  Username: string;
-  Title: string;
-  Description: string;
-  Location: string;
-  Phone: string;
-  Status: string;
-}
+import { extractReportTitle } from "@/types/report";
+import { LaporanFormat } from "../utils/reportUtils";
 
 export default function Done() {
   const [reports, setReports] = useState<LaporanFormat[]>([]);
@@ -25,14 +18,15 @@ export default function Done() {
         const response = await reportService.getAllReports();
         if (response.success) {
           const formattedReports = response.data
-            .filter((report) => report.status === "completed")
+            .filter((report) => report.status === "completed" || report.status === "finished")
             .map((report) => ({
-              Username: report.userName,
-              Title: report.content.substring(0, 20) + (report.content.length > 20 ? "..." : ""),
-              Description: report.content,
+              Username: report.userName || "Anonymous User",
+              Title: report.title || "No Title",
+              Description: report.content || "",
               Location: report.place,
-              Phone: report.phoneNumber,
+              Phone: report.phoneNumber || "Not provided",
               Status: "Selesai",
+              Id: report.id,
             }));
           setReports(formattedReports);
         }

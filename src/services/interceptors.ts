@@ -21,6 +21,15 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
       return response;
     },
     async (error: AxiosError) => {
+      // Improved error handling for debugging CORS issues
+      if (error.message === "Network Error") {
+        console.error("Possible CORS error:", error);
+        // Log detailed information to help debugging
+        console.log("Request URL:", error.config?.url);
+        console.log("Request Method:", error.config?.method);
+        console.log("Request Headers:", error.config?.headers);
+      }
+
       const originalRequest = error.config;
 
       if (error.response?.status === 401 && originalRequest) {

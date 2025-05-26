@@ -4,15 +4,8 @@ import Table from "@/app/components/table";
 import { useState, useEffect } from "react";
 import reportService from "@/services/report-service";
 import IconProvider from "@/app/components/common/IconProvider";
-
-interface LaporanFormat {
-  Username: string;
-  Title: string;
-  Description: string;
-  Location: string;
-  Phone: string;
-  Status: string;
-}
+import { extractReportTitle } from "@/types/report";
+import { LaporanFormat } from "../utils/reportUtils";
 
 export default function Pending() {
   const [reports, setReports] = useState<LaporanFormat[]>([]);
@@ -27,12 +20,13 @@ export default function Pending() {
           const formattedReports = response.data
             .filter((report) => report.status === "pending" || report.status === "hold")
             .map((report) => ({
-              Username: report.userName,
-              Title: report.content.substring(0, 20) + (report.content.length > 20 ? "..." : ""),
-              Description: report.content,
+              Username: report.userName || "Anonymous User",
+              Title: report.title || "No Title",
+              Description: report.content || "",
               Location: report.place,
-              Phone: report.phoneNumber,
+              Phone: report.phoneNumber || "Not provided",
               Status: "Diajukan",
+              Id: report.id,
             }));
           setReports(formattedReports);
         }

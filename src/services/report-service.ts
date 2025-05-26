@@ -1,17 +1,5 @@
-import { Report } from "@/types/report";
+import { Report, convertResponseToReport, ReportResponse } from "@/types/report";
 import api from "./api-config";
-
-export interface ReportResponse {
-  id: number;
-  user_name: string;
-  content: string;
-  place: string;
-  phone_number: string;
-  status: string;
-  attachment: string;
-  created_at: string;
-  updated_at: string;
-}
 
 export interface ReportListResponse {
   success: boolean;
@@ -20,25 +8,18 @@ export interface ReportListResponse {
   };
 }
 
+export interface SingleReportResponse {
+  success: boolean;
+  data: ReportResponse;
+}
+
 export const reportService = {
   getAllReports: async (): Promise<{ success: boolean; data: Report[] }> => {
     try {
       const response = await api.get<ReportListResponse>("/reports");
 
       if (response.data.success) {
-        const reports = response.data.data.reports.map((report) => ({
-          id: report.id,
-          userName: report.user_name,
-          content: report.content,
-          place: report.place,
-          phoneNumber: report.phone_number,
-          status: report.status,
-          attachment: report.attachment,
-          reply: "",
-          createdAt: report.created_at,
-          updatedAt: report.updated_at,
-        }));
-
+        const reports = response.data.data.reports.map(convertResponseToReport);
         return { success: true, data: reports };
       }
 
@@ -46,6 +27,41 @@ export const reportService = {
     } catch (error) {
       console.error("Error fetching reports:", error);
       return { success: false, data: [] };
+    }
+  },
+
+  getReportById: async (id: number): Promise<{ success: boolean; data: Report | null }> => {
+    try {
+      const response = await api.get<SingleReportResponse>(`/reports/${id}`);
+
+      if (response.data.success) {
+        const report = convertResponseToReport(response.data.data);
+        return { success: true, data: report };
+      }
+
+      return { success: false, data: null };
+    } catch (error) {
+      console.error(`Error fetching report ${id}:`, error);
+      return { success: false, data: null };
+    }
+  },
+
+  updateReportStatus: async (id: number, status: string): Promise<{ success: boolean; data: Report | null }> => {
+    try {
+      // Use the new endpoint specifically for status updates
+      const response = await api.patch<SingleReportResponse>(`/reports/${id}/status`, {
+        status,
+      });
+
+      if (response.data.success) {
+        const report = convertResponseToReport(response.data.data);
+        return { success: true, data: report };
+      }
+
+      return { success: false, data: null };
+    } catch (error) {
+      console.error(`Error updating report ${id} status:`, error);
+      return { success: false, data: null };
     }
   },
 };

@@ -5,48 +5,12 @@ import React, { useState, useEffect } from "react";
 import IconProvider from "@/app/components/common/IconProvider";
 import reportService from "@/services/report-service";
 import { Report } from "@/types/report";
-
-const mapStatus = (status: string): string => {
-  switch (status) {
-    case "pending":
-      return "Diajukan";
-    case "processing":
-      return "Diproses";
-    case "completed":
-      return "Selesai";
-    case "hold":
-      return "Diajukan";
-    default:
-      return status;
-  }
-};
-
-const convertToLaporan = (report: Report) => ({
-  Username: report.userName,
-  Title: report.content.substring(0, 20) + (report.content.length > 20 ? "..." : ""),
-  Description: report.content,
-  Location: report.place,
-  Phone: report.phoneNumber,
-  Status: mapStatus(report.status),
-});
-
-function getStatusStyle(status: string) {
-  switch (status) {
-    case "Selesai":
-      return "bg-[#a6e7d8] text-[#048464] border border-[#048464]";
-    case "Diajukan":
-      return "bg-[#fccccc] text-[#de1010] border border-[#de1010]";
-    case "Diproses":
-      return "bg-[#fbd3b4] text-[#e88c22] border border-[#e88c22]";
-    case "Active":
-      return "bg-[#a6e7d8] text-[#048464] border border-[#048464]";
-    default:
-      return "";
-  }
-}
+import { getStatusStyle, mapStatus, convertReportToLaporan } from "../utils/reportUtils";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function All() {
   const router = useRouter();
+  const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const [sortStatus, setSortStatus] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -74,7 +38,7 @@ export default function All() {
     fetchReports();
   }, []);
 
-  const data = reports.map(convertToLaporan);
+  const data = reports.map(convertReportToLaporan);
 
   const filteredData = data.filter((item) => {
     const matchesSearch = item.Username.toLowerCase().includes(searchTerm.toLowerCase()) || item.Title.toLowerCase().includes(searchTerm.toLowerCase()) || item.Description.toLowerCase().includes(searchTerm.toLowerCase());
@@ -93,7 +57,7 @@ export default function All() {
     <div className="flex flex-col h-full px-20 py-10">
       <div className="flex items-center mb-10">
         <IconProvider icon="UserCircleIcon" className="w-8 h-8 text-[#00608C]" />
-        <p className="text-2xl font-bold text-black ml-2">Hello User</p>
+        <p className="text-2xl font-bold text-black ml-2">Hello, {user?.username || "User"}</p>
       </div>
 
       <div className="bg-white w-full h-full py-10 px-10 shadow-xl rounded-2xl">
@@ -158,18 +122,26 @@ export default function All() {
                 </tr>
               </thead>
               <tbody className="text-black font-medium font-satoshi">
-                {currentItems.map((item, idx) => (
-                  <tr key={idx} className="border-b border-[#E0E0E0] cursor-pointer hover:bg-gray-50" onClick={() => router.push(`all/${reports[indexOfFirstItem + idx].id}`)}>
-                    <td className="py-7">{item.Username}</td>
-                    <td>{item.Title}</td>
-                    <td>{item.Description}</td>
-                    <td>{item.Location}</td>
-                    <td>{item.Phone}</td>
-                    <td>
-                      <span className={`w-20 h-8 flex justify-center items-center rounded-[5px] text-sm font-semibold ${getStatusStyle(item.Status)}`}>{item.Status}</span>
+                {currentItems.length > 0 ? (
+                  currentItems.map((item, idx) => (
+                    <tr key={item.Id} className="border-b border-[#E0E0E0] cursor-pointer hover:bg-gray-50" onClick={() => router.push(`all/${item.Id}`)}>
+                      <td className="py-7">{item.Username}</td>
+                      <td className="font-semibold">{item.Title}</td>
+                      <td>{item.Description ? item.Description.substring(0, 30) + (item.Description.length > 30 ? "..." : "") : "No description"}</td>
+                      <td>{item.Location}</td>
+                      <td>{item.Phone}</td>
+                      <td>
+                        <span className={`w-20 h-8 flex justify-center items-center rounded-[5px] text-sm font-semibold ${getStatusStyle(item.Status)}`}>{item.Status}</span>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={6} className="py-8 text-center text-gray-500">
+                      No reports found
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
 
